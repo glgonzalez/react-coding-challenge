@@ -1,6 +1,12 @@
 import React, { Fragment } from 'react'
 import Button from '@material-ui/core/Button'
-import { Divider, Grid, Toolbar, Typography, Container } from '@material-ui/core';
+import { 
+  Divider, 
+  Grid, 
+  Toolbar, 
+  Typography, 
+  Container 
+} from '@material-ui/core';
 import Api from '../api'
 import { CustomSnackbar } from './custom-snackbar';
 import { MessageGrid } from './message-grid';
@@ -87,6 +93,7 @@ class MessageList extends React.PureComponent {
     });
   }
 
+  
   clearSingleMessage = (messageId, messagePrio) => {
     const {errors, warnings, info} = this.state;
     switch(messagePrio) {

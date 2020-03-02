@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import MessageList from './components/message-list';
-import {ErrorBoundary} from './components/error-boundary';
+import { ErrorBoundary } from './components/error';
 
 const NewApp = require('./components/message-list').default
 
