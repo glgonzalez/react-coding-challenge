@@ -2,8 +2,8 @@ import React, { Fragment } from 'react'
 import Button from '@material-ui/core/Button'
 import { Divider, Grid, Toolbar, Typography, Container } from '@material-ui/core';
 import Api from '../api'
-import { Message } from './message';
 import { CustomSnackbar } from './custom-snackbar';
+import { MessageGrid } from './message-grid';
 
 
 
@@ -29,31 +29,35 @@ class MessageList extends React.PureComponent {
   }
 
   messageCallback(message) {
-    const { errors, warnings, info } = this.state
-    if(message.priority === 1) {
-      this.setState({
-        errors: [
-          message,
-          ...errors
-        ],
-        error: message.message
-      });
-    } else if(message.priority === 2) {
-      this.setState({
-        warnings: [
-          message,
-          ...warnings
-        ]
-      });
-    } else if(message.priority === 3) {
-      this.setState({
-        info: [
-          message,
-          ...info
-        ]
-      });
-    } else {
-      throw new Error('Invalid Message Type');
+    const { errors, warnings, info } = this.state;
+    switch(message.priority) {
+      case 1: 
+        this.setState({
+          errors: [
+            message,
+            ...errors
+          ],
+          error: message.message
+        });
+        break;
+      case 2: 
+        this.setState({
+          warnings: [
+            message,
+            ...warnings
+          ]
+        });
+        break;
+      case 3: 
+        this.setState({
+          info: [
+            message,
+            ...info
+          ]
+        });
+        break;
+      default:
+        throw new Error('Invalid Message Type');
     }
   }
 
@@ -115,17 +119,13 @@ class MessageList extends React.PureComponent {
     }
   }
 
-  renderList = (messages) => {
-    return (
-      <Fragment>
-        {messages.map(message => <Message key={message.id} message={message} clear={this.clearSingleMessage}/>)}
-      </Fragment>
-    )
-  }
-
   render() {
     const isApiStarted = this.api.isStarted()
-    const { errors, warnings, info, error } = this.state;
+    const { 
+      errors, 
+      warnings, 
+      info, 
+      error } = this.state;
     return (
       <Fragment>
         <Toolbar>
@@ -135,7 +135,10 @@ class MessageList extends React.PureComponent {
         </Toolbar>
         <Divider />
         <Toolbar>
-          <Grid container spacing={2} justify="center">
+          <Grid 
+            container 
+            spacing={2} 
+            justify="center">
             <Grid item>
               <Button
                 variant="contained"
@@ -145,39 +148,19 @@ class MessageList extends React.PureComponent {
               </Button>
             </Grid>
               <Grid item>
-                <Button variant="contained" onClick={this.clearMessages} data-testid="clearAll">Clear Messages</Button>
+                <Button 
+                  variant="contained" 
+                  onClick={this.clearMessages} 
+                  data-testid="clearAll">Clear Messages</Button>
               </Grid>
           </Grid>
         </Toolbar>
         <Container>
-          <Grid container spacing={2} justify="center">
-            <Grid item xs={4}>
-              <Typography variant="h6">
-                Error Type 1
-              </Typography>
-              <Typography variant="body2">
-                {`Count ${errors.length}`}
-              </Typography>{this.renderList(errors)}
-            </Grid>
-            <Grid item xs={4}>
-              <Typography variant="h6">
-                Warning Type 2
-              </Typography>
-              <Typography variant="body2">
-                {`Count ${warnings.length}`}
-              </Typography>
-              {this.renderList(warnings)}
-            </Grid>
-            <Grid item xs={4}>
-              <Typography variant="h6">
-                Info Type 3
-              </Typography>
-              <Typography variant="body2">
-                {`Count ${info.length}`}
-              </Typography>
-              {this.renderList(info)}
-            </Grid>
-          </Grid>
+          <MessageGrid 
+            errors={errors} 
+            warnings={warnings} 
+            info={info} 
+            clear={this.clearSingleMessage}/>
         </Container>
         <CustomSnackbar error={error} handleClose={this.handleClose} />
       </Fragment>
